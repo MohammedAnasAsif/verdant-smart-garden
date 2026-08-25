@@ -17,8 +17,9 @@ import { GardenZones } from "@/components/garden-zones";
 import { WateringSchedule } from "@/components/watering-schedule";
 import { AIInsights } from "@/components/ai-insights";
 import { PlantLibrary } from "@/components/plant-library";
+import { PropertyFinderPage } from "@/components/property-finder";
 
-type NavSection = "dashboard" | "plants" | "schedule" | "analytics" | "settings";
+type NavSection = "dashboard" | "plants" | "schedule" | "analytics" | "settings" | "properties";
 
 const MOISTURE_HISTORY = [45, 48, 52, 55, 50, 47, 42, 38, 35, 32, 30, 28, 31, 34, 38, 42, 45, 48, 50, 52];
 const TEMP_HISTORY = [22, 23, 24, 25, 26, 27, 28, 27, 26, 25, 24, 23, 22, 21, 22, 23, 24, 25, 26, 27];
@@ -95,8 +96,12 @@ export default function SmartGardenPage() {
 
         <main className="flex-1 overflow-y-auto rail-scroll">
           <div className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
-            {/* Stats row */}
-            <GardenStats
+            {activeSection === "properties" ? (
+              <PropertyFinderPage />
+            ) : (
+              <>
+                {/* Stats row */}
+                <GardenStats
               totalPlants={47}
               healthyPlants={38}
               waterSaved="340L"
@@ -224,6 +229,8 @@ export default function SmartGardenPage() {
 
             {/* Footer spacer */}
             <div className="h-8" />
+            </>
+            )}
           </div>
         </main>
       </div>

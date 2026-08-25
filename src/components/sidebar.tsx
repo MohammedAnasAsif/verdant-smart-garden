@@ -12,9 +12,10 @@ import {
   FlowerLotus,
   CalendarBlank,
   Gear,
+  Buildings,
 } from "@phosphor-icons/react";
 
-type NavSection = "dashboard" | "plants" | "schedule" | "analytics" | "settings";
+type NavSection = "dashboard" | "plants" | "schedule" | "analytics" | "settings" | "properties";
 
 interface SidebarProps {
   activeSection: NavSection;
@@ -23,6 +24,7 @@ interface SidebarProps {
 
 const NAV_ITEMS: { key: NavSection; label: string; icon: React.ReactNode }[] = [
   { key: "dashboard", label: "Dashboard", icon: <House size={18} /> },
+  { key: "properties", label: "Property Finder", icon: <Buildings size={18} /> },
   { key: "plants", label: "My Plants", icon: <FlowerLotus size={18} /> },
   { key: "schedule", label: "Schedule", icon: <CalendarBlank size={18} /> },
   { key: "analytics", label: "Analytics", icon: <ChartLineUp size={18} /> },

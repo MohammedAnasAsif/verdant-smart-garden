@@ -21,21 +21,29 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Captionly — AI Social Media Caption Writer",
+  title: "Verdant — AI Smart Garden & Property Finder",
   description:
-    "Generate scroll-stopping captions for any platform with AI. Choose your tone, style, and call to action.",
+    "Intelligent data and real-time tracking to plan, grow, and manage your plants with AI-powered insights. Plus, find homes and building lands across Karnataka with AI property search.",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#fafafa",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0a0f1a" },
+    { media: "(prefers-color-scheme: light)", color: "#faf9f7" },
+  ],
 };
+
+const themeInit = `(function(){try{var t=localStorage.getItem("verdant.theme");var d=t?t==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;if(d)document.documentElement.classList.add("dark");}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${bricolage.variable} ${geist.variable} ${geistMono.variable}`}>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+      </head>
+      <body className={`${bricolage.variable} ${geist.variable} ${geistMono.variable} grain`}>
         {children}
       </body>
     </html>
