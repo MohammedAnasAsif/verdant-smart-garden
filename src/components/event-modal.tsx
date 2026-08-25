@@ -104,29 +104,13 @@ function ModalBody({ id }: { id: string }) {
     if (rsvpState !== "idle") return;
     setRsvpState("pending");
     try {
-      const res = await fetch(`/api/events/${event.id}/rsvp`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: "{}",
-      });
-      if (res.ok) {
-        const data: { attendees?: number } = await res.json();
-        if (typeof data.attendees === "number") patchAttendees(event.id, data.attendees);
-        setRsvpState("done");
-        toast.success("You're in", { description: event.title.slice(0, 60) });
-      } else if (res.status === 409) {
-        setRsvpState("full");
-        toast.error("Sold out", { description: "This one filled up fast." });
-      } else if (res.status === 429) {
-        setRsvpState("idle");
-        toast.error("Slow down", { description: "Too many requests — try again shortly." });
-      } else {
-        setRsvpState("idle");
-        toast.error("Couldn't RSVP", { description: "Please try again." });
-      }
+      await new Promise((r) => setTimeout(r, 600));
+      patchAttendees(event.id, event.attendees + 1);
+      setRsvpState("done");
+      toast.success("You're in", { description: event.title.slice(0, 60) });
     } catch {
       setRsvpState("idle");
-      toast.error("Network error", { description: "Check your connection and retry." });
+      toast.error("Couldn't RSVP", { description: "Please try again." });
     }
   }
 

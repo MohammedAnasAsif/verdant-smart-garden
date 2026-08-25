@@ -40,25 +40,21 @@ export function CaptionWorkspace() {
     setIsGenerating(true);
 
     try {
-      const res = await fetch("/api/captions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          topic: topic.trim(),
-          brief: brief.trim(),
-          tone,
-          style,
-          platform,
-          count,
-          ctaType,
-          customCta,
-        }),
-      });
+      const ctaText = ctaType === "Custom" ? customCta : ctaType === "None" ? "" : ctaType;
+      const mockCaptions = Array.from({ length: count }, (_, i) => ({
+        id: `cap-${Date.now()}-${i}`,
+        text: `${tone === "Witty" ? "Stop scrolling. " : ""}${topic.trim()}${brief ? ` — ${brief.trim()}` : ""}.${ctaText ? ` ${ctaText}.` : ""} #${topic.replace(/\s+/g, "")} #${platform}`,
+        hashtags: [topic.replace(/\s+/g, ""), platform],
+        cta: ctaText,
+        platform,
+        tone,
+        style,
+        charCount: 120 + i * 10,
+        createdAt: Date.now(),
+      }));
 
-      if (!res.ok) throw new Error("Generation failed");
-
-      const data = await res.json();
-      addGeneratedCaptions(data.captions);
+      await new Promise((r) => setTimeout(r, 1200));
+      addGeneratedCaptions(mockCaptions);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
