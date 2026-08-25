@@ -18,11 +18,8 @@ export function TopicInput() {
 
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
-        <label
-          htmlFor="topic"
-          className="block text-sm font-medium text-ink-muted"
-        >
+      <div className="space-y-1.5">
+        <label htmlFor="topic" className="block text-xs font-medium uppercase tracking-wider text-ink-muted">
           Topic or Subject
         </label>
         <input
@@ -30,25 +27,21 @@ export function TopicInput() {
           type="text"
           value={topic}
           onChange={handleTopicChange}
-          placeholder="e.g. AI tools for productivity, new product launch, mental health tips"
-          className="w-full rounded-[var(--radius-card)] border border-line bg-surface px-4 py-3 text-ink placeholder:text-ink-faint focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors"
+          placeholder="AI tools for productivity, product launch, mental health tips..."
+          className="w-full rounded-lg border border-line bg-surface px-4 py-2.5 text-sm text-ink placeholder:text-ink-faint focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30 transition-colors"
         />
       </div>
-      <div className="space-y-2">
-        <label
-          htmlFor="brief"
-          className="block text-sm font-medium text-ink-muted"
-        >
-          Brief / Context{" "}
-          <span className="text-ink-faint">(optional — adds depth)</span>
+      <div className="space-y-1.5">
+        <label htmlFor="brief" className="block text-xs font-medium uppercase tracking-wider text-ink-muted">
+          Brief / Context <span className="normal-case text-ink-faint">(optional)</span>
         </label>
         <textarea
           id="brief"
           value={brief}
           onChange={handleBriefChange}
           rows={3}
-          placeholder="e.g. We just launched a free AI writing assistant that helps content creators save 5 hours per week on drafting social posts."
-          className="w-full rounded-[var(--radius-card)] border border-line bg-surface px-4 py-3 text-ink placeholder:text-ink-faint focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors resize-none"
+          placeholder="We just launched a free AI writing assistant that helps content creators save 5 hours per week..."
+          className="w-full rounded-lg border border-line bg-surface px-4 py-2.5 text-sm text-ink placeholder:text-ink-faint focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30 transition-colors resize-none"
         />
       </div>
     </div>

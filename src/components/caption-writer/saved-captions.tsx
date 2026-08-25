@@ -9,7 +9,7 @@ export function SavedCaptions() {
   const { savedCaptions, removeSavedCaption } = useCaptionStore();
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const handleCopy = useCallback(async (caption: typeof savedCaptions[0]) => {
+  const handleCopy = useCallback(async (caption: (typeof savedCaptions)[0]) => {
     const fullText = caption.hashtags.length
       ? `${caption.text}\n\n${caption.hashtags.map((h) => `#${h}`).join(" ")}`
       : caption.text;
@@ -20,15 +20,11 @@ export function SavedCaptions() {
 
   if (savedCaptions.length === 0) {
     return (
-      <div className="rounded-[var(--radius-card)] border border-dashed border-line p-8 text-center">
-        <BookmarkSimple
-          size={32}
-          weight="light"
-          className="mx-auto mb-3 text-ink-faint"
-        />
+      <div className="rounded-xl border border-dashed border-line p-12 text-center">
+        <BookmarkSimple size={28} weight="light" className="mx-auto mb-3 text-ink-faint" />
         <p className="text-sm text-ink-muted">No saved captions yet</p>
         <p className="mt-1 text-[12px] text-ink-faint">
-          Click the Save button on any generated caption to add it here
+          Click Save on any caption to add it here
         </p>
       </div>
     );
@@ -37,8 +33,8 @@ export function SavedCaptions() {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-ink">
-          Saved Captions ({savedCaptions.length})
+        <h3 className="text-sm font-semibold text-ink">
+          Saved ({savedCaptions.length})
         </h3>
       </div>
       <AnimatePresence mode="popLayout">
@@ -46,19 +42,24 @@ export function SavedCaptions() {
           <motion.div
             key={cap.id}
             layout
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
+            exit={{ opacity: 0, scale: 0.97 }}
             transition={{ duration: 0.2 }}
-            className="rounded-[var(--radius-card)] border border-line bg-surface p-4"
+            className="rounded-xl border border-line bg-surface p-4"
           >
             <div className="mb-2 flex items-center gap-2">
-              <span className="inline-flex items-center rounded-full border border-line bg-surface-2 px-2 py-0.5 text-[10px] font-medium text-ink-faint">
+              <span className="inline-flex items-center rounded-md bg-surface-2 px-2 py-0.5 text-[10px] font-medium text-ink-faint">
                 {cap.tone}
               </span>
-              <span className="inline-flex items-center rounded-full border border-line bg-surface-2 px-2 py-0.5 text-[10px] font-medium text-ink-faint">
+              <span className="inline-flex items-center rounded-md bg-surface-2 px-2 py-0.5 text-[10px] font-medium text-ink-faint">
                 {cap.platform}
               </span>
+              {cap.abVariant && (
+                <span className="inline-flex items-center rounded-md bg-accent-muted px-2 py-0.5 text-[10px] font-medium text-accent">
+                  Variant {cap.abVariant}
+                </span>
+              )}
               <span className="ml-auto font-mono text-[10px] text-ink-faint">
                 {cap.charCount}
               </span>
@@ -69,9 +70,7 @@ export function SavedCaptions() {
             {cap.hashtags.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-1">
                 {cap.hashtags.map((h) => (
-                  <span key={h} className="text-[11px] text-accent/70">
-                    #{h}
-                  </span>
+                  <span key={h} className="text-[11px] text-accent/70">#{h}</span>
                 ))}
               </div>
             )}
@@ -81,7 +80,7 @@ export function SavedCaptions() {
                 className="pressable flex items-center gap-1 rounded-md border border-line px-2.5 py-1 text-[11px] font-medium text-ink-muted hover:bg-surface-2"
               >
                 {copiedId === cap.id ? (
-                  <Check size={11} className="text-emerald-500" />
+                  <Check size={11} className="text-success" />
                 ) : (
                   <Copy size={11} />
                 )}
@@ -89,7 +88,7 @@ export function SavedCaptions() {
               </button>
               <button
                 onClick={() => removeSavedCaption(cap.id)}
-                className="pressable flex items-center gap-1 rounded-md border border-line px-2.5 py-1 text-[11px] font-medium text-ink-faint hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-400"
+                className="pressable flex items-center gap-1 rounded-md border border-line px-2.5 py-1 text-[11px] font-medium text-ink-faint hover:border-danger/30 hover:bg-danger/5 hover:text-danger"
               >
                 <Trash size={11} />
                 Remove

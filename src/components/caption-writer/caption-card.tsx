@@ -2,9 +2,10 @@
 
 import { useCaptionStore } from "@/lib/caption-store";
 import type { GeneratedCaption } from "@/lib/caption-types";
-import { Check, Copy, Pencil, Bookmark, Star } from "@phosphor-icons/react";
+import { Check, Copy, Pencil, Bookmark, Star, ArrowsLeftRight } from "@phosphor-icons/react";
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { CharCounter } from "./char-counter";
 
 export function CaptionCard({ caption }: { caption: GeneratedCaption }) {
   const {
@@ -40,46 +41,39 @@ export function CaptionCard({ caption }: { caption: GeneratedCaption }) {
     }
   }, [isSaved, caption, saveCaption, removeSavedCaption]);
 
-  const toneColors: Record<string, string> = {
-    Professional: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    Casual: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    Humorous: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    Inspirational: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-    Urgent: "bg-red-500/10 text-red-400 border-red-500/20",
-    Friendly: "bg-pink-500/10 text-pink-400 border-pink-500/20",
-    Bold: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-    Educational: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-    Witty: "bg-violet-500/10 text-violet-400 border-violet-500/20",
-    Empathetic: "bg-rose-500/10 text-rose-400 border-rose-500/20",
-  };
+  const variantBadge =
+    caption.abVariant === "A"
+      ? { label: "Variant A", cls: "bg-blue-50 text-blue-600 border-blue-200" }
+      : caption.abVariant === "B"
+      ? { label: "Variant B", cls: "bg-purple-50 text-purple-600 border-purple-200" }
+      : null;
 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -12 }}
-      transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
-      className="group relative rounded-[var(--radius-card)] border border-line bg-surface p-5 hover-lift"
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+      className="group rounded-xl border border-line bg-surface p-5 hover-lift"
     >
-      {/* Header tags */}
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <span
-          className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${
-            toneColors[caption.tone] || "bg-surface-2 text-ink-muted border-line"
-          }`}
-        >
+      {/* Header */}
+      <div className="mb-3 flex items-center gap-2">
+        {variantBadge && (
+          <span className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[10px] font-semibold ${variantBadge.cls}`}>
+            <ArrowsLeftRight size={10} />
+            {variantBadge.label}
+          </span>
+        )}
+        <span className="inline-flex items-center rounded-md bg-surface-2 px-2 py-0.5 text-[10px] font-medium text-ink-faint">
           {caption.tone}
         </span>
-        <span className="inline-flex items-center rounded-full border border-line bg-surface-2 px-2.5 py-0.5 text-[11px] font-medium text-ink-muted">
+        <span className="inline-flex items-center rounded-md bg-surface-2 px-2 py-0.5 text-[10px] font-medium text-ink-faint">
           {caption.style}
         </span>
-        <span className="inline-flex items-center rounded-full border border-line bg-surface-2 px-2.5 py-0.5 text-[11px] font-medium text-ink-muted">
-          {caption.platform}
-        </span>
-        <span className="ml-auto text-[11px] font-mono text-ink-faint">
-          {caption.charCount} chars
-        </span>
+        <div className="ml-auto">
+          <CharCounter current={caption.charCount} platform={caption.platform} />
+        </div>
       </div>
 
       {/* Caption text */}
@@ -88,11 +82,11 @@ export function CaptionCard({ caption }: { caption: GeneratedCaption }) {
           value={editingText}
           onChange={(e) => updateEditingText(e.target.value)}
           rows={6}
-          className="w-full rounded-xl border border-accent bg-surface-2 px-3 py-2.5 text-sm text-ink leading-relaxed focus:outline-none focus:ring-2 focus:ring-accent/20 resize-none font-[inherit]"
+          className="w-full rounded-lg border border-accent bg-surface-2 px-3 py-2.5 text-sm text-ink leading-relaxed focus:outline-none focus:ring-1 focus:ring-accent/30 resize-none font-[inherit]"
           autoFocus
         />
       ) : (
-        <p className="whitespace-pre-line text-sm text-ink leading-relaxed">
+        <p className="whitespace-pre-line text-[13px] text-ink leading-relaxed">
           {caption.text}
         </p>
       )}
@@ -101,10 +95,7 @@ export function CaptionCard({ caption }: { caption: GeneratedCaption }) {
       {caption.hashtags.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1.5">
           {caption.hashtags.map((h) => (
-            <span
-              key={h}
-              className="text-[12px] font-medium text-accent/80"
-            >
+            <span key={h} className="rounded-md bg-accent-muted px-2 py-0.5 text-[11px] font-medium text-accent">
               #{h}
             </span>
           ))}
@@ -119,7 +110,7 @@ export function CaptionCard({ caption }: { caption: GeneratedCaption }) {
               onClick={saveEdit}
               className="pressable flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-[12px] font-medium text-on-accent hover:bg-accent-hover"
             >
-              <Check size={13} weight="bold" />
+              <Check size={12} weight="bold" />
               Save
             </button>
             <button
@@ -142,9 +133,9 @@ export function CaptionCard({ caption }: { caption: GeneratedCaption }) {
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.8, opacity: 0 }}
-                    className="flex items-center gap-1.5 text-emerald-500"
+                    className="flex items-center gap-1.5 text-success"
                   >
-                    <Check size={13} weight="bold" />
+                    <Check size={12} weight="bold" />
                     Copied!
                   </motion.span>
                 ) : (
@@ -155,7 +146,7 @@ export function CaptionCard({ caption }: { caption: GeneratedCaption }) {
                     exit={{ scale: 0.8, opacity: 0 }}
                     className="flex items-center gap-1.5"
                   >
-                    <Copy size={13} />
+                    <Copy size={12} />
                     Copy
                   </motion.span>
                 )}
@@ -165,21 +156,21 @@ export function CaptionCard({ caption }: { caption: GeneratedCaption }) {
               onClick={() => startEditing(caption.id, caption.text)}
               className="pressable flex items-center gap-1.5 rounded-lg border border-line px-3 py-1.5 text-[12px] font-medium text-ink-muted hover:bg-surface-2 hover:text-ink"
             >
-              <Pencil size={13} />
+              <Pencil size={12} />
               Edit
             </button>
             <button
               onClick={handleSave}
               className={`pressable flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[12px] font-medium transition-colors ${
                 isSaved
-                  ? "border-accent/30 bg-accent/10 text-accent"
+                  ? "border-accent/30 bg-accent-muted text-accent"
                   : "border-line text-ink-muted hover:bg-surface-2 hover:text-ink"
               }`}
             >
               {isSaved ? (
-                <Star size={13} weight="fill" />
+                <Star size={12} weight="fill" />
               ) : (
-                <Bookmark size={13} />
+                <Bookmark size={12} />
               )}
               {isSaved ? "Saved" : "Save"}
             </button>

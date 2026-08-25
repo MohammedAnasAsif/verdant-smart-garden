@@ -3,6 +3,7 @@ import type {
   CaptionTone,
   CaptionStyle,
   Platform,
+  Language,
   GeneratedCaption,
   CTAType,
 } from "./caption-types";
@@ -13,11 +14,15 @@ interface CaptionState {
   tone: CaptionTone;
   style: CaptionStyle;
   platform: Platform;
+  language: Language;
   ctaType: CTAType;
   customCta: string;
+  count: number;
+  abMode: boolean;
   isGenerating: boolean;
   generatedCaptions: GeneratedCaption[];
   savedCaptions: GeneratedCaption[];
+  history: GeneratedCaption[];
   editingId: string | null;
   editingText: string;
 
@@ -26,10 +31,12 @@ interface CaptionState {
   setTone: (tone: CaptionTone) => void;
   setStyle: (style: CaptionStyle) => void;
   setPlatform: (platform: Platform) => void;
+  setLanguage: (language: Language) => void;
   setCtaType: (ctaType: CTAType) => void;
   setCustomCta: (cta: string) => void;
+  setCount: (count: number) => void;
+  setAbMode: (abMode: boolean) => void;
   setIsGenerating: (v: boolean) => void;
-  setGeneratedCaptions: (captions: GeneratedCaption[]) => void;
   addGeneratedCaptions: (captions: GeneratedCaption[]) => void;
   saveCaption: (caption: GeneratedCaption) => void;
   removeSavedCaption: (id: string) => void;
@@ -38,6 +45,8 @@ interface CaptionState {
   saveEdit: () => void;
   cancelEdit: () => void;
   clearGenerated: () => void;
+  removeFromHistory: (id: string) => void;
+  clearHistory: () => void;
 }
 
 export const useCaptionStore = create<CaptionState>((set, get) => ({
@@ -46,11 +55,15 @@ export const useCaptionStore = create<CaptionState>((set, get) => ({
   tone: "Professional",
   style: "Storytelling",
   platform: "Instagram",
+  language: "English",
   ctaType: "None",
   customCta: "",
+  count: 3,
+  abMode: false,
   isGenerating: false,
   generatedCaptions: [],
   savedCaptions: [],
+  history: [],
   editingId: null,
   editingText: "",
 
@@ -59,13 +72,17 @@ export const useCaptionStore = create<CaptionState>((set, get) => ({
   setTone: (tone) => set({ tone }),
   setStyle: (style) => set({ style }),
   setPlatform: (platform) => set({ platform }),
+  setLanguage: (language) => set({ language }),
   setCtaType: (ctaType) => set({ ctaType }),
   setCustomCta: (customCta) => set({ customCta }),
+  setCount: (count) => set({ count }),
+  setAbMode: (abMode) => set({ abMode }),
   setIsGenerating: (isGenerating) => set({ isGenerating }),
-  setGeneratedCaptions: (generatedCaptions) => set({ generatedCaptions }),
+
   addGeneratedCaptions: (newCaptions) =>
     set((s) => ({
       generatedCaptions: [...s.generatedCaptions, ...newCaptions],
+      history: [...newCaptions, ...s.history],
     })),
 
   saveCaption: (caption) =>
@@ -82,7 +99,7 @@ export const useCaptionStore = create<CaptionState>((set, get) => ({
   startEditing: (id, text) => set({ editingId: id, editingText: text }),
   updateEditingText: (editingText) => set({ editingText }),
   saveEdit: () => {
-    const { editingId, editingText, generatedCaptions, savedCaptions } = get();
+    const { editingId, editingText, generatedCaptions, savedCaptions, history } = get();
     if (!editingId) return;
     const update = (list: GeneratedCaption[]) =>
       list.map((c) =>
@@ -93,10 +110,18 @@ export const useCaptionStore = create<CaptionState>((set, get) => ({
     set({
       generatedCaptions: update(generatedCaptions),
       savedCaptions: update(savedCaptions),
+      history: update(history),
       editingId: null,
       editingText: "",
     });
   },
   cancelEdit: () => set({ editingId: null, editingText: "" }),
   clearGenerated: () => set({ generatedCaptions: [] }),
+
+  removeFromHistory: (id) =>
+    set((s) => ({
+      history: s.history.filter((c) => c.id !== id),
+    })),
+
+  clearHistory: () => set({ history: [] }),
 }));

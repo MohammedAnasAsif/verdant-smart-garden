@@ -6,7 +6,9 @@ import {
   CAPTION_STYLES,
   PLATFORMS,
   CTA_TYPES,
+  LANGUAGES,
 } from "@/lib/caption-types";
+import type { Platform } from "@/lib/caption-types";
 
 function ChipGroup<T extends string>({
   label,
@@ -21,16 +23,16 @@ function ChipGroup<T extends string>({
 }) {
   return (
     <div className="space-y-2">
-      <span className="block text-sm font-medium text-ink-muted">{label}</span>
-      <div className="flex flex-wrap gap-2">
+      <span className="block text-xs font-medium uppercase tracking-wider text-ink-muted">{label}</span>
+      <div className="flex flex-wrap gap-1.5">
         {options.map((opt) => (
           <button
             key={opt}
             type="button"
             onClick={() => onChange(opt)}
-            className={`pressable rounded-full px-3.5 py-1.5 text-[13px] font-medium border transition-colors ${
+            className={`pressable rounded-md px-3 py-1.5 text-[12px] font-medium border transition-colors ${
               value === opt
-                ? "border-accent bg-accent/10 text-accent"
+                ? "border-accent bg-accent text-on-accent"
                 : "border-line bg-surface text-ink-muted hover:border-line-strong hover:text-ink"
             }`}
           >
@@ -47,14 +49,18 @@ export function ToneStyleSelector() {
     tone,
     style,
     platform,
+    language,
     ctaType,
     customCta,
     setTone,
     setStyle,
     setPlatform,
+    setLanguage,
     setCtaType,
     setCustomCta,
   } = useCaptionStore();
+
+  const platformNames = Object.keys(PLATFORMS) as Platform[];
 
   return (
     <div className="space-y-5">
@@ -72,9 +78,15 @@ export function ToneStyleSelector() {
       />
       <ChipGroup
         label="Platform"
-        options={PLATFORMS}
+        options={platformNames}
         value={platform}
         onChange={setPlatform}
+      />
+      <ChipGroup
+        label="Language"
+        options={LANGUAGES}
+        value={language}
+        onChange={setLanguage}
       />
       <ChipGroup
         label="Call to Action"
@@ -83,11 +95,8 @@ export function ToneStyleSelector() {
         onChange={setCtaType}
       />
       {ctaType === "Custom" && (
-        <div className="space-y-2">
-          <label
-            htmlFor="custom-cta"
-            className="block text-sm font-medium text-ink-muted"
-          >
+        <div className="space-y-1.5">
+          <label htmlFor="custom-cta" className="block text-xs font-medium uppercase tracking-wider text-ink-muted">
             Custom CTA
           </label>
           <input
@@ -95,8 +104,8 @@ export function ToneStyleSelector() {
             type="text"
             value={customCta}
             onChange={(e) => setCustomCta(e.target.value)}
-            placeholder="e.g. Download our free guide — link in bio!"
-            className="w-full rounded-[var(--radius-card)] border border-line bg-surface px-4 py-2.5 text-ink placeholder:text-ink-faint focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors text-sm"
+            placeholder="Download our free guide — link in bio!"
+            className="w-full rounded-lg border border-line bg-surface px-4 py-2 text-sm text-ink placeholder:text-ink-faint focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30 transition-colors"
           />
         </div>
       )}
