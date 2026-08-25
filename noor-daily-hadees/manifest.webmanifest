@@ -1,0 +1,31 @@
+{
+  "name": "Noor — Daily Hadees",
+  "short_name": "Noor",
+  "description": "One authentic hadees every day — with its backstory, history, narrator and meaning, in easy steps.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f2e9",
+  "theme_color": "#14563b",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
