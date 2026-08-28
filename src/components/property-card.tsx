@@ -8,7 +8,6 @@ import {
   Ruler,
   TrendUp,
   TrendDown,
-  Heart,
   Star,
   Clock,
   BookmarkSimple,
@@ -77,6 +76,11 @@ export const PropertyCard = memo(function PropertyCard({ property, onSelect }: P
           {p.priceDrop && (
             <span className="flex items-center gap-1 rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-bold text-white">
               <TrendDown size={10} /> {p.priceDrop}% off
+            </span>
+          )}
+          {p.borderState && (
+            <span className="flex items-center gap-1 rounded-full bg-sky-500 px-2 py-0.5 text-[10px] font-bold text-white">
+              <MapPin size={10} /> {p.borderState} Border
             </span>
           )}
         </div>

@@ -65,6 +65,7 @@ export interface PropertyItem {
   appreciationRate: number;
   tags: string[];
   createdAt: number;
+  borderState?: string;
 }
 
 export interface PropertyFilters {
@@ -81,4 +82,24 @@ export interface PropertyFilters {
 export interface KarnatakaDistrict {
   name: string;
   cities: string[];
+  lat: number;
+  lng: number;
+  border?: string;
+}
+
+export interface SearchIntent {
+  bhk?: BHK;
+  types?: PropertyType[];
+  status?: PropertyStatus;
+  priceMin?: number;
+  priceMax?: number;
+  locations?: string[];
+  sort?: string;
+  border?: string;
+  keywords?: string[];
+}
+
+export interface SmartSearchResult {
+  list: PropertyItem[];
+  intent: SearchIntent;
 }

@@ -181,6 +181,7 @@ function ModalBody({ property, onClose }: { property: PropertyItem; onClose: () 
             <Pill icon={<Ruler size={12} />}>{p.area.toLocaleString("en-IN")} sq.ft</Pill>
             <Pill icon={<NavigationArrow size={12} />}>{p.facing} Facing</Pill>
             <Pill icon={<Clock size={12} />}>{p.status.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}</Pill>
+            {p.borderState && <Pill icon={<MapPin size={12} />}>Near {p.borderState} Border</Pill>}
           </div>
         </div>
 
@@ -349,7 +350,7 @@ function ModalBody({ property, onClose }: { property: PropertyItem; onClose: () 
                   </div>
                   <div className="rounded-lg bg-surface-2/50 p-3">
                     <p className="text-[10px] text-ink-faint">Rental Yield Est.</p>
-                    <p className="text-[18px] font-bold text-ink">{(2.5 + Math.random() * 2).toFixed(1)}%</p>
+                    <p className="text-[18px] font-bold text-ink">{(2.5 + (p.appreciationRate * 7 % 200) / 100).toFixed(1)}%</p>
                     <p className="text-[10px] text-ink-faint">annual</p>
                   </div>
                 </div>

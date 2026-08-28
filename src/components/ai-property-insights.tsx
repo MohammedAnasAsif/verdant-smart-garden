@@ -4,13 +4,11 @@ import { memo } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
   TrendUp,
-  TrendDown,
   Lightbulb,
   CurrencyCircleDollar,
   MapPin,
   ChartLineUp,
   Sparkle,
-  TreeEvergreen,
 } from "@phosphor-icons/react";
 import type { PropertyItem } from "@/lib/property-types";
 
@@ -33,6 +31,7 @@ export const AIPropertyInsights = memo(function AIPropertyInsights({ properties 
   const avgAppreciation = properties.reduce((s, p) => s + p.appreciationRate, 0) / properties.length;
   const avgInvestment = properties.reduce((s, p) => s + p.investmentScore, 0) / properties.length;
   const undervalued = properties.filter((p) => p.estimatedPrice > p.price);
+  const borderProps = properties.filter((p) => p.borderState);
   const topPicks = [...properties].sort((a, b) => b.investmentScore - a.investmentScore).slice(0, 3);
 
   const bestArea = Object.entries(
@@ -107,6 +106,9 @@ export const AIPropertyInsights = memo(function AIPropertyInsights({ properties 
               <Insight text={`${undervalued.length} properties are undervalued by AI estimation — potential upside opportunity`} />
             )}
             <Insight text={`Karnataka real estate showing ${avgAppreciation > 8 ? "strong" : "steady"} growth at ${avgAppreciation.toFixed(1)}% avg. annual appreciation`} />
+            {borderProps.length > 0 && (
+              <Insight text={`${borderProps.length} near-state-border options (Goa, Kerala, Tamil Nadu, Maharashtra, Telangana, Andhra) — often cheaper with highway access`} />
+            )}
             {topPicks.length > 0 && (
               <Insight text={`Top investment picks: ${topPicks.map((p) => p.location.area).join(", ")}`} />
             )}

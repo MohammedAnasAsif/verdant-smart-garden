@@ -30,7 +30,7 @@ export const PropertyFiltersBar = memo(function PropertyFiltersBar({ filters, on
           type="text"
           value={filters.query}
           onChange={(e) => onUpdate({ query: e.target.value })}
-          placeholder='Search "3BHK near Whitefield under 50L" or "plot in Mysuru"...'
+          placeholder='Try "3BHK near Whitefield under 50L" · "plot in Mysuru" · "land near Kerala border by 30L"...'
           className="w-full rounded-2xl border border-line bg-surface py-3 pl-11 pr-4 text-[13px] text-ink placeholder:text-ink-faint transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10"
         />
         {filters.query && (
@@ -91,7 +91,7 @@ export const PropertyFiltersBar = memo(function PropertyFiltersBar({ filters, on
           onChange={(v) => onUpdate({ city: v })}
           options={[
             { value: "all", label: "All Karnataka" },
-            ...ALL_CITIES.slice(0, 15).map((c) => ({ value: c, label: c })),
+            ...ALL_CITIES.map((c) => ({ value: c, label: c })),
           ]}
         />
 

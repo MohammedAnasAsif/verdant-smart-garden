@@ -3,8 +3,8 @@
 import { useState, useMemo, useCallback } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { TreeEvergreen } from "@phosphor-icons/react";
-import type { PropertyFilters as PF, PropertyItem } from "@/lib/property-types";
-import { PROPERTIES, searchProperties } from "@/lib/property-data";
+import type { PropertyFilters as PF, PropertyItem, SearchIntent } from "@/lib/property-types";
+import { PROPERTIES, smartSearch } from "@/lib/property-data";
 import { PropertyCard } from "@/components/property-card";
 import { PropertyFiltersBar } from "@/components/property-filters";
 import { PropertyModal } from "@/components/property-modal";
@@ -21,11 +21,14 @@ const DEFAULT_FILTERS: PF = {
   sort: "investment",
 };
 
-function applyFilters(props: PropertyItem[], filters: PF): PropertyItem[] {
+function applyFilters(props: PropertyItem[], filters: PF): { list: PropertyItem[]; intent: SearchIntent } {
   let result = [...props];
+  let intent: SearchIntent = {};
 
   if (filters.query) {
-    result = searchProperties(filters.query, result);
+    const smart = smartSearch(filters.query, result);
+    result = smart.list;
+    intent = smart.intent;
   }
 
   if (filters.type !== "all") {
@@ -79,7 +82,27 @@ function applyFilters(props: PropertyItem[], filters: PF): PropertyItem[] {
       break;
   }
 
-  return result;
+  return { list: result, intent };
+}
+
+function IntentChips({ intent }: { intent: SearchIntent }) {
+  const chips: string[] = [];
+  if (intent.bhk) chips.push(`${intent.bhk} only`);
+  if (intent.types && intent.types.length > 0) chips.push(`Type: ${intent.types.map((t) => t.replace("-", " ")).join(", ")}`);
+  if (intent.priceMin !== undefined && intent.priceMax !== undefined) chips.push(`₹${(intent.priceMin / 100000).toFixed(0)}L – ₹${(intent.priceMax / 100000).toFixed(0)}L`);
+  else if (intent.priceMax !== undefined) chips.push(`Under ₹${(intent.priceMax / 100000).toFixed(1)}L`);
+  else if (intent.priceMin !== undefined) chips.push(`Above ₹${(intent.priceMin / 100000).toFixed(1)}L`);
+  if (intent.border) chips.push(`Near ${intent.border} border`);
+  if (intent.locations && intent.locations.length > 0) chips.push(`In ${intent.locations.join(", ")}`);
+  if (chips.length === 0) return null;
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      <span className="text-[11px] font-semibold text-accent">AI understood:</span>
+      {chips.map((c) => (
+        <span key={c} className="rounded-full bg-accent/10 px-2.5 py-0.5 text-[11px] font-medium text-accent">{c}</span>
+      ))}
+    </div>
+  );
 }
 
 export function PropertyFinderPage() {
@@ -87,7 +110,7 @@ export function PropertyFinderPage() {
   const [filters, setFilters] = useState<PF>(DEFAULT_FILTERS);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const filtered = useMemo(() => applyFilters(PROPERTIES, filters), [filters]);
+  const { list: filtered, intent } = useMemo(() => applyFilters(PROPERTIES, filters), [filters]);
   const selected = useMemo(() => PROPERTIES.find((p) => p.id === selectedId) || null, [selectedId]);
 
   const handleUpdate = useCallback((updates: Partial<PF>) => {
@@ -109,10 +132,11 @@ export function PropertyFinderPage() {
           </div>
           <div>
             <h1 className="font-display text-xl font-bold text-ink">AI Property Finder</h1>
-            <p className="text-[12px] text-ink-muted">Find homes & building lands across Karnataka</p>
+            <p className="text-[12px] text-ink-muted">Homes, apartments & land across Karnataka — and its six state borders</p>
           </div>
         </div>
         <PropertyFiltersBar filters={filters} onUpdate={handleUpdate} resultCount={filtered.length} />
+        {filters.query && <div className="mt-3"><IntentChips intent={intent} /></div>}
       </motion.div>
 
       {/* Content */}
